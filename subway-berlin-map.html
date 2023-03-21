@@ -1,0 +1,153 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+crossorigin=""/>
+
+<style>
+    #topMap { height: 200px; width: 250px; }
+    #botMap { height: 200px; width: 250px;}
+    #leftMap { height: 400px; width: 250px;}
+    #rightMap { height: 400px; width: 250px;}
+    #mainMap { height: 600px; width: 1250px;}
+    /* transparent background with slighty rounded corners with higher z index */
+    #Transparenzkasten { position: relative; width: 8em; left: 10px;top: -70px; background-color: rgba(240, 248, 255, 0.792); border-radius: 15px; padding: 10px; z-index: 1000; }
+</style>
+
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+crossorigin=""></script>
+
+<!-- <table>
+<tbody>
+   <tr>
+       <td rowspan="2"><div id="leftMap"></div></td>
+       <td><div id="topMap"></div></td>
+       <td rowspan="2"><div id="rightMap"></div></td>
+   </tr>
+   <tr>
+       <td><div id="botMap"></div></td>
+   </tr>
+<tr>
+ <td colspan="3"><div id="mainMap"></div></td>
+</tr>
+</tbody>
+</table> -->
+
+<div id="mainMap"></div>
+<div id="Transparenzkasten">
+<label for="Transparenz">Transparenz</label>
+<input id="slide" name="Transparenz" type="range" min="0.0" max="1.0" step="0.05" value="0.8" onchange="updateSlider(this.value)">
+</div>
+<!-- <div id="sliderAmount">0.8</div> -->
+
+
+<script>
+
+    console.log("Leaflet loaded");
+    var topMapPosHor = 52.6400;
+    var topMapPosVer = 13.3777;
+    var topMapZoom = 13;
+
+    var botMapPosHor = 52.3800;
+    var botMapPosVer = 13.3777;
+    var botMapZoom = 13;
+
+    var leftMapPosHor = 52.5163;
+    var leftMapPosVer = 13.1200;
+    var leftMapZoom = 13;
+
+    var rightMapPosHor = 52.5163;
+    var rightMapPosVer = 13.6500;
+    var rightMapZoom = 13;
+
+    var mainMapPosHor = 52.5163;
+    var mainMapPosVer = 13.3777;
+    var mainMapZoom = 10;
+
+    var picLeft = 13.1020;
+    var picRight = 13.6650;
+    var picTop = 52.7170;
+    var picBottum = 52.3530;
+
+    var opacity = 0.9;
+
+    var sliderDiv = 0.8;
+
+    var slideAmount = 0.8;
+    var slideAmountTemp = 0.8;
+
+    var imageOverlay;
+
+    function updateSlider(slideAmount) {
+        //L.imageOverlay(imageUrl, imageBounds, { opacity: slideAmountTemp}).remove(mainMap);
+        //mainMap.remove(imageOverlay);
+        imageOverlay.removeFrom(mainMap);
+        // Konvertiere slideAmount in eine Zahl
+        slideAmountTemp = Number(slideAmount);     
+
+        // Aktualisiere den Wert des Anzeigeelements
+        //sliderDiv.innerHTML = slideAmount;
+        slideAmountTemp = slideAmount;
+        imageOverlay = L.imageOverlay(imageUrl, imageBounds, { opacity: slideAmountTemp}).addTo(mainMap);
+        
+    }
+
+    // Weise der Variable einen Wert zu, nachdem das Element ausgewählt wurde
+    sliderDiv = document.getElementById("sliderAmount");
+    
+
+    // var topMap = L.map('topMap').setView([topMapPosHor, topMapPosVer], topMapZoom);
+
+    // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     maxZoom: 19,
+    //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    // }).addTo(topMap);
+
+    // var botMap = L.map('botMap').setView([botMapPosHor, botMapPosVer], botMapZoom);
+
+    // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     maxZoom: 19,
+    //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    // }).addTo(botMap);
+
+    // var leftMap = L.map('leftMap').setView([leftMapPosHor, leftMapPosVer], leftMapZoom);
+
+    // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     maxZoom: 19,
+    //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    // }).addTo(leftMap);
+
+    // var rightMap = L.map('rightMap').setView([rightMapPosHor, rightMapPosVer], rightMapZoom);
+
+    // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     maxZoom: 19,
+    //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    // }).addTo(rightMap);
+
+
+    var mainMap = L.map('mainMap').setView([mainMapPosHor, mainMapPosVer], mainMapZoom);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(mainMap);
+
+    L.control.scale( {
+        position: 'bottomright',
+        metric: true,
+        imperial: false,
+        maxWidth: 300
+    } ).addTo(mainMap);
+
+  
+    //'https://i.imgur.com/SMFUTBk.png'
+
+    var imageUrl = 'map-2-deg.png',
+        imageBounds = [[picTop, picLeft], [picBottum, picRight]];
+
+    // L.imageOverlay(imageUrl, imageBounds, { opacity: opacity }).addTo(topMap);
+    // L.imageOverlay(imageUrl, imageBounds, { opacity: opacity }).addTo(botMap);
+    // L.imageOverlay(imageUrl, imageBounds, { opacity: opacity }).addTo(leftMap);
+    // L.imageOverlay(imageUrl, imageBounds, { opacity: opacity }).addTo(rightMap);
+    imageOverlay = L.imageOverlay(imageUrl, imageBounds, { opacity: slideAmount}).addTo(mainMap);
+</script>
